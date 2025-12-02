@@ -20,8 +20,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final List<String> NO_AUTH_PATHS = List.of(
-        "/api/member/signup",
-        "/api/member/login"
+        "/auth/register",
+        "/auth/login"
     );
 
     @Override

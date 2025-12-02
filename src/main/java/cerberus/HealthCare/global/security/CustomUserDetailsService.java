@@ -2,13 +2,12 @@ package cerberus.HealthCare.global.security;
 
 
 import cerberus.HealthCare.user.entity.User;
-import cerberus.HealthCare.user.repository.UserRepository;
+import cerberus.HealthCare.user.repository.UserAuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,12 +15,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserAuthRepository userAuthRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("사용자 정보 조회: username={}", username);
-        return userRepository.findByEmail(username)
+        return userAuthRepository.findByEmail(username)
             .map(user -> {
                 log.info("사용자 발견: username={}", username);
                 return createUserDetails(user);
