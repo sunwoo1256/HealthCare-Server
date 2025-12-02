@@ -36,9 +36,10 @@ jobs:
     - name: application.yml 파일 설정
       run: |
         mkdir -p src/main/resources
-        mkdir -p src/test/resources
         echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
-        echo "${{ secrets.TEST_APPLICATION_YML }}" > ./src/test/resources/application.yml
+        
+        # mkdir -p src/test/resources
+        # echo "${{ secrets.TEST_APPLICATION_YML }}" > ./src/test/resources/application.yml
 
     # 1-4. gradle 환경 설치
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
