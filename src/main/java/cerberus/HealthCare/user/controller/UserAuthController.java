@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "사용자", description = "사용자 관련 API")
+@Tag(name = "사용자 인증", description = "사용자 인증 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -31,12 +31,8 @@ public class UserAuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<JwtToken>> login(@RequestBody LoginRequest loginRequest){
-        try{
-            JwtToken jwtToken = userAuthService.login(loginRequest.getEmail(), loginRequest.getPassword());
-            return BaseResponse.ok("로그인 성공", jwtToken);
-        }catch (Exception e){
-            return BaseResponse.unauthorized("이메일 또는 비밀번호가 일치하지 않습니다.", null);
-        }
+        JwtToken jwtToken = userAuthService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        return BaseResponse.ok("로그인 성공", jwtToken);
     }
 
     @Operation(summary = "회원가입", description = "사용자 회원가입")
@@ -46,12 +42,8 @@ public class UserAuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<BaseResponse<SignUpResponse>> signUp(@RequestBody SignUpRequest signUpRequest){
-        try{
-            SignUpResponse signUpResponse = userAuthService.signUp(signUpRequest);
-            return BaseResponse.created("회원가입", signUpResponse);
-        }catch (Exception e){
-            return BaseResponse.conflict("이미 존재하는 회원입니다", null);
-        }
+        SignUpResponse signUpResponse = userAuthService.signUp(signUpRequest);
+        return BaseResponse.created("회원가입", signUpResponse);
     }
 
 }

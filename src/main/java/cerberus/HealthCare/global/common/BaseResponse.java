@@ -20,6 +20,13 @@ public class BaseResponse<T> {
         return ResponseEntity.status(status).body(response);
     }
 
+    // 에러용 (body null)
+    public static ResponseEntity<BaseResponse<?>> of(HttpStatus status, String message) {
+        String meta = status.value() + ": " + message;
+        BaseResponse<Object> response = new BaseResponse<>(meta, null);
+        return ResponseEntity.status(status).body(response);
+    }
+
     public static <T> ResponseEntity<BaseResponse<T>> ok(String message, T body) {
         return of(HttpStatus.OK, message, body);
     }

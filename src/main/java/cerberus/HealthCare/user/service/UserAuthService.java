@@ -1,5 +1,7 @@
 package cerberus.HealthCare.user.service;
 
+import cerberus.HealthCare.global.exception.CoreException;
+import cerberus.HealthCare.global.exception.code.UserErrorCode;
 import cerberus.HealthCare.global.security.JwtToken;
 import cerberus.HealthCare.global.security.JwtTokenProvider;
 import cerberus.HealthCare.user.dto.SignUpRequest;
@@ -31,15 +33,8 @@ public class UserAuthService {
         log.info("AuthenticationToken 생성: email={}", email);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
-        Authentication authentication = null;
-        try {
-            authentication = authenticationManager.authenticate(authenticationToken);
-            log.info("Authentication 성공: email={}", email);
-        } catch (Exception e) {
-            log.error("Authentication 실패: email={}, 이유={}", email, e.getMessage());
-            throw e;
-        }
-
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        log.info("Authentication 성공: email={}", email);
         JwtToken token = jwtTokenProvider.generateToken(authentication);
         log.info("JWT 토큰 생성 완료: email={}", email);
         return token;
@@ -49,13 +44,12 @@ public class UserAuthService {
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
 
         if (userAuthRepository.existsByEmail(signUpRequest.getEmail())){
-            throw new IllegalArgumentException("이미 사용중인 이메일 입니다.");
+            throw new CoreException(UserErrorCode.USER_ALREADY_EXISTS);
         }
 
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
         User user = userAuthRepository.save(signUpRequest.toUser(encodedPassword));
         return new SignUpResponse(user.getEmail(), user.getNickname(), user.getRoles());
-
     }
 }
 
