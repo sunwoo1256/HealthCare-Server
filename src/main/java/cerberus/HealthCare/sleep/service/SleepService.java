@@ -1,0 +1,51 @@
+package cerberus.HealthCare.sleep.service;
+
+import cerberus.HealthCare.global.exception.CoreException;
+import cerberus.HealthCare.global.exception.code.UserErrorCode;
+import cerberus.HealthCare.sleep.dto.CreateSleepResponse;
+import cerberus.HealthCare.sleep.entity.SleepLog;
+import cerberus.HealthCare.sleep.repository.SleepRepository;
+import cerberus.HealthCare.user.entity.User;
+import cerberus.HealthCare.user.repository.UserRepository;
+import cerberus.HealthCare.user.service.UserService;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Slf4j
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class SleepService {
+
+    private final SleepRepository sleepRepository;
+    private final UserRepository userRepository;
+
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    private LocalDateTime parse(String timeStr) {
+        return LocalDateTime.parse(timeStr, FORMATTER);
+    }
+
+    @Transactional
+    public CreateSleepResponse createSleep(String username, String start, String end) {
+        User user = userRepository.findByEmail(username)
+            .orElseThrow(() -> new CoreException(UserErrorCode.USER_NOT_FOUND));
+
+        LocalDateTime startTime = parse(start);
+        LocalDateTime endTime = parse(end);
+
+        SleepLog sleepLog = SleepLog.builder()
+            .user(user)
+            .start(startTime)
+            .endTime(endTime)
+            .build();
+
+        sleepRepository.save(sleepLog);
+        return new CreateSleepResponse(user.getId(), sleepLog.getId(), start, end);
+    }
+}
