@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -67,6 +68,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<BaseResponse<?>> handleExpiredJwt() {
         return BaseResponse.of(HttpStatus.UNAUTHORIZED, "로그인이 만료되었습니다. 다시 로그인해주세요.");
+    }
+
+    // 404 Not Found
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<BaseResponse<?>> handleNotFound(NoResourceFoundException ex) {
+        log.error("[NotFoundException] {}", ex.getMessage(), ex);
+        return BaseResponse.of(HttpStatus.NOT_FOUND, "요청한 URL을 찾을 수 없습니다.");
     }
 
 
