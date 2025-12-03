@@ -31,7 +31,7 @@ public class UserController {
     @Operation(summary = "수면 패턴 입력", description = "초기 사용자 수면 패턴 입력")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "수면 패턴 추가 완료"),
-        @ApiResponse(responseCode = "401", description = "이메일 또는 비밀번호가 일치하지 않습니다.")
+        @ApiResponse(responseCode = "401", description = "유저를 찾을 수 없습니다")
     })
     @PostMapping("/sleep-pattern")
     public ResponseEntity<BaseResponse<SleepPatternResponse>> createSleepPattern(
