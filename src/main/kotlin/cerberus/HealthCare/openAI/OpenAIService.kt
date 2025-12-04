@@ -6,11 +6,15 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Service
 
+@Service
 class ChatGPT(
-    private val apikey: String,
+    @Value("\${openai.api-key}")  // application.yml 또는 환경변수에서 주입됨
+    private val apiKey: String
 ){
-    private val client = OpenAI(apikey)
+    private val client: OpenAI = OpenAI(apiKey)
 
     suspend fun getCompletionMessage(prompt: String): String {
         val chatCompletionRequest = ChatCompletionRequest(
