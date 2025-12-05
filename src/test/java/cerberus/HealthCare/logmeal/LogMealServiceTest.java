@@ -5,13 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.io.InputStream;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class LogMealServiceTest {
 
     private LogMealService logMealService;
-    private static final String API_TOKEN = "api-token";
+
+    @Value("${logmeal.api-token}")
+    private String API_TOKEN;
 
     @BeforeEach
     void setUp() {

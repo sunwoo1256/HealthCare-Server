@@ -3,12 +3,18 @@ package cerberus.HealthCare.openAI;
 import cerberus.HealthCare.openAI.ChatGPT;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class ChatGPTTest {
 
     private ChatGPT chat;
-    private static final String API_KEY = "API_KEY";
+
+    @Value("${openai.api-key}")
+    private String API_KEY;
 
     @BeforeEach
     public void setUp() {
@@ -18,7 +24,7 @@ public class ChatGPTTest {
     @Test
     public void testGetCompletionMessageBlocking() {
         // Given
-        String prompt = "say 'this is test'";
+        String prompt = "say '안녕하세요'";
 
         // When
         String result = chat.getCompletionMessageBlocking(prompt);
@@ -29,7 +35,7 @@ public class ChatGPTTest {
         System.out.println("Response: " + result);
 
         // Optional: Check if response contains expected text
-        assertTrue(result.toLowerCase().contains("test"),
+        assertTrue(result.toLowerCase().contains("안녕하세요"),
                 "Response should contain the word 'test'");
     }
 }
